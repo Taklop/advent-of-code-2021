@@ -11,7 +11,7 @@ export const start = (): void => {
     );
 };
 
-const countIncreases = (arr: number[]): number => {
+export const countIncreases = (arr: number[]): number => {
     return arr.reduce((acc, curr, index) => {
         if (index === 0) {
             return 0;
