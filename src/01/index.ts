@@ -1,22 +1,39 @@
 import { readFileSync } from 'fs';
 import * as path from 'path';
 
+const input = readFileSync(path.join(__dirname, 'input.txt'), 'utf8')
+    .split('\n')
+    .map(Number);
+
 export const start = (): void => {
-    const input = readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+    console.log(`There are ${countIncreases(input)} numbers that increase`);
 
     console.log(
-        `There are ${countIncreases(
-            input.split('\n').map(Number),
-        )} numbers that increase`,
+        `When using a sliding window of 3, there are ${countWindowIncreases(
+            input,
+        )} sums larger  than the previous sum!`,
     );
 };
 
-export const countIncreases = (arr: number[]): number => {
-    return arr.reduce((acc, curr, index) => {
+export const countIncreases = (inputDepths: number[]): number =>
+    inputDepths.reduce((increaseCount, currentDepth, index) => {
         if (index === 0) {
-            return 0;
+            return increaseCount;
         }
 
-        return acc + (curr > arr[index - 1] ? 1 : 0);
+        return increaseCount + (currentDepth > inputDepths[index - 1] ? 1 : 0);
     }, 0);
-};
+
+export const calculateWindows = (inputDepths: number[]): number[] =>
+    inputDepths
+        .map((currentDepth, index, inputDepths) => {
+            if (index > inputDepths.length - 3) {
+                return 0;
+            }
+            return (currentDepth +=
+                inputDepths[index + 1] + inputDepths[index + 2]);
+        })
+        .slice(0, inputDepths.length - 2);
+
+export const countWindowIncreases = (inputDepths: number[]): number =>
+    countIncreases(calculateWindows(inputDepths));
