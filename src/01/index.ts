@@ -12,7 +12,11 @@ export const start = (): void => {
 };
 
 const countIncreases = (arr: number[]): number => {
-    return arr.reduce((acc, curr) => {
-        return acc + (curr > 0 ? 1 : 0);
+    return arr.reduce((acc, curr, index) => {
+        if (index === 0) {
+            return 0;
+        }
+
+        return acc + (curr > arr[index - 1] ? 1 : 0);
     }, 0);
 };
